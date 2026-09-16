@@ -38,13 +38,13 @@ kvco, kdco = 100e6 * 2*np.pi, 1.25e6 * 2*np.pi
 vco_pn = PhaseNoise(white_noise_100MHz=-130, flicker_noise_10kHz=-15).get_noise_power(f)
 
 # sigma is the jitter at the detector input, and must be consistent with the gains below
-sigma = 1033.4e-15 * 2*np.pi*100e6
+sigma = 1013.2e-15 * 2*np.pi*100e6
 
 bbpd = BangBangPhaseDetector(rms_jitter_radians=sigma)
-dlf  = DigitalLoopFilter(kp=0.52221, ki=0.054081, sampling_time=10e-9,
-                         latency=521e-12, approximation_method='ZoH')
+dlf  = DigitalLoopFilter(kp=0.507793, ki=0.0667074, sampling_time=10e-9,
+                         latency=0, approximation_method='ZoH')
 _, dvco_d = DVCO(kvco, kdco, vco_pn).tf(f)
-div = Divider(divider_ratio=80, latency=170e-12)
+div = Divider(divider_ratio=80, latency=0)
 
 LG = bbpd.tf(f) * dlf.tf(f) * dvco_d * div.tf(f)
 
@@ -69,7 +69,7 @@ resolves this with a damped fixed-point iteration.
 
 **Sampled loops have a phase-margin ceiling.** The zero-order-hold half-sample delay costs phase
 in proportion to `BW × T_sample` — at 10 ns sampling that is −18° at 10 MHz, capping phase margin
-near 69.5°. Asking for more is unattainable, not a tuning problem.
+at 72° with no transport latency. Asking for more is unattainable, not a tuning problem.
 
 **`fsolve` fails silently past that ceiling**, returning gains around `1e8` and nonsense jitter
 while `get_pm_bw` reports a plausible-looking phase margin. Check the feasibility bound, the
@@ -77,9 +77,9 @@ convergence flag, and the residual, then confirm with `get_pm_bw`.
 
 ## Example results
 
-100 MHz reference → 8 GHz output (N = 80), 10 MHz bandwidth, 60° phase margin — **1033 fs** total:
-VCO 678 fs (43 % of jitter power), reference 541 fs (27 %), BBPD quantization 504 fs (24 %),
-DAC quantization 245 fs (6 %).
+100 MHz reference → 8 GHz output (N = 80), 10 MHz bandwidth, 60° phase margin — **1013 fs** total:
+VCO 657 fs (42 % of jitter power), reference 541 fs (29 %), BBPD quantization 492 fs (24 %),
+DAC quantization 243 fs (6 %).
 
 ## Scope
 
