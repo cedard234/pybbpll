@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pybbpll"
+version = "0.1.0"
+description = "Frequency-domain linear model for bang-bang and hybrid phase-locked loops"
+# Distribution name is `pybbpll`; the import package is `bbpll`.
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Di Wang", email = "di_wang@berkeley.edu" }]
+keywords = ["pll", "bbpll", "phase-noise", "jitter", "phase-locked-loop"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "numpy>=2.2.6",
+    "matplotlib>=3.10.3",
+    "scipy>=1.15.3",
+    "pandas>=2.3.0",
+]
+
+[project.optional-dependencies]
+examples = ["jupyterlab"]
+
+[tool.setuptools]
+packages = ["bbpll"]
